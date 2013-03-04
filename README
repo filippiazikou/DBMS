@@ -1,0 +1,3 @@
+DBMS divided in four levels (Block File, Extendible Hashing index, Data Administration and Views). 
+Implemented in C language for the course “Software Development”.
+Department of Informatics and Telecommunications, University of Athens

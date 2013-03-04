@@ -1,0 +1,64 @@
+/* To script αυτό μπορείτε να το τρέξετε μέσω ανακατεύθυνσης είτε σε Dos είτε σε κέλυφος Linux/Unix. */
+/* Σκοπός του script είναι να σας δώσει μία ιδέα για όλες τις επιτρεπτές πράξεις και για το πώς περνούν τα ορίσματα από τον parser στις συναρτήσεις UT και DM. */
+
+
+/* Δημιουργία 4 σχέσεων */
+CREATE STUDENTS (studId='i', studName='c50', studYear='i');
+CREATE GRADES (studId='i', studGrade='f');
+CREATE GRADES_EXPANDED (studId='i', studGrade='f', minRequested='f');
+CREATE STUDENTS_BACKUP (studId='i', studName='c50', studYear='i');
+
+/* Δημιουργία ευρετηρίου στα πεδία studId και studId των σχέσεων STUDENTS και GRADES αντίστοιχα. */
+BUILDINDEX STUDENTS(studId);
+BUILDINDEX GRADES(studId);
+
+/* Επιλογή χωρίς συνθήκη */
+SELECT (STUDENTS.studName, STUDENTS.studYear);
+
+/* Επιλογή με απλή συνθήκη */
+SELECT (STUDENTS.studName, STUDENTS.studYear) WHERE STUDENTS.studYear>4;
+
+/* Απλή ζεύξη */
+SELECT (STUDENTS.studName, GRADES.studGrade) WHERE STUDENTS.studId=GRADES.studId;
+
+/* Επιλογή χωρίς συνθήκη και αποθήκευση αποτελέσματος σε νέα σχέση */
+SELECT INTO STUDENTS_TEMP (STUDENTS.studName, STUDENTS.studYear);
+
+/* Επιλογή με απλή συνθήκη και αποθήκευση αποτελέσματος σε νέα σχέση */
+SELECT INTO OLDER_STUDENTS (STUDENTS.studName, STUDENTS.studYear) WHERE STUDENTS.studYear>4;
+
+/* Απλή ζεύξη και αποθήκευση αποτελέσματος σε νέα σχέση */
+SELECT INTO STUDENTS_GRADES (STUDENTS.studName, GRADES.studGrade) WHERE STUDENTS.studId=GRADES.studId;
+
+/* Απλή ζεύξη μεταξύ πεδίων της ίδιας σχέσης και αποθήκευση αποτελέσματος σε νέα σχέση */
+SELECT INTO GRADES_PASSED (GRADES_EXPANDED.studiD, GRADES_EXPANDED.studGrade) WHERE GRADES_EXPANDED.grade>=GRADES_EXPANDED.minRequested;
+
+/* Διαγραφή χωρίς συνθήκη */
+DELETE STUDENTS;
+
+/* Διαγραφή με απλή συνθήκη *
+DELETE STUDENTS WHERE studYear>4;
+
+/* Διαγραφή εγγραφών που περιέχονται σε άλλη σχέση */
+DELETE STUDENTS RECORDS OF STUDENTS_BACKUP;
+
+/* Εισαγωγή εγγραφής */
+INSERT STUDENTS (studName="Antonis", studYear=5, studId=1023);
+
+/* Εισαγωγή εγγραφών που περιέχονται σε άλλη σχέση */
+INSERT STUDENTS RECORDS OF STUDENTS_BACKUP;
+
+/* Διαγραφή αρχικών σχέσεων */
+DESTROY STUDENTS;
+DESTROY GRADES;
+DESTROY GRADES_EXPANDED;
+DESTROY STUDENTS_BACKUP;
+
+/* Διαγραφή σχέσεων που κατασκευάστηκαν ενδιάμεσα */
+DESTROY STUDENTS_TEMP;
+DESTROY OLDER_STUDENTS;
+DESTROY STUDENTS_GRADES;
+DESTROY GRADES_PASSED;
+
+/* Έξοδος */
+QUIT;
